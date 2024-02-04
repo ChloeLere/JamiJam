@@ -4,10 +4,10 @@ from midiutil import MIDIFile
 from note import Note
 import random
 
-def major_chord(root):
+def major_triad(root):
     return [root, root + 4, root + 7]
 
-def minor_chord(root):
+def minor_triad(root):
     return [root, root + 3, root + 7]
 
 def major_scale(root):
@@ -55,7 +55,7 @@ def generate_bar(scale):
 
 def generate_phrase(root):
     bar1 = generate_bar(major_scale(root))
-    bar2 = generate_bar(minor_scale(root))
-    bar3 = bar2
+    bar2 = bar1
+    bar3 = generate_bar(major_scale(root))
     bar4 = generate_bar(major_scale(root))
     return bar1 + bar2 + bar3 + bar4

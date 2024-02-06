@@ -4,7 +4,7 @@ from datetime import datetime
 import mg_lib
 
 class MusicGeneration:
-    def __init__(self, tempo=-1, feeling="joy", file_name="output_" + str(datetime.now())):
+    def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
         self.duration = 1
         self.volume = 100
         self.tempo = tempo

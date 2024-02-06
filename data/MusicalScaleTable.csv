@@ -1,0 +1,25 @@
+name,root,emotion,type
+C Major,0,"simplicity, innocence, brightness, brilliance, grandeur, confidence, energy, exuberance, vitality, celebration",Major
+C Minor,0,"introspection, mystery, yearning, anticipation, warmth, tenderness, nostalgia, sadness, depth",Minor
+C# Minor,1,"mystery, yearning, anticipation, melancholy, introspection, warmth, tenderness, nostalgia, sadness, passion",Minor
+Db Major,1,"brightness, brilliance, grandeur, warmth, tenderness, nostalgia, mystery, yearning, anticipation, passion, romance",Major
+D Major,2,"boldness, triumph, heroism, brightness, optimism, uplift, confidence, energy, exuberance, celebration",Major
+D Minor,2,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, boldness, triumph, heroism",Minor
+D# Minor,3,"mystery, yearning, anticipation, melancholy, introspection, warmth, tenderness, nostalgia, passion, sadness",Minor
+Eb Major,3,"warmth, tenderness, nostalgia, mystery, yearning, anticipation, introspection, melancholy, depth, passion, romance",Major
+E Major,4,"confidence, energy, exuberance, vitality, celebration, brightness, brilliance, grandeur, boldness, triumph, heroism",Major
+E Minor,4,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, warmth, tenderness, nostalgia",Minor
+F Major,6,"serenity, peace, contentment, mystery, yearning, anticipation, introspection, melancholy, depth, nobility, majesty, expansiveness",Major
+F Minor,6,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, serenity, peace, contentment",Minor
+F# Minor,7,"mystery, yearning, anticipation, melancholy, introspection, warmth, tenderness, nostalgia, passion, sadness",Minor
+Gb Major,7,"mystery, yearning, anticipation, introspection, melancholy, depth, brightness, brilliance, grandeur, boldness, triumph, heroism",Major
+G Major,8,"brightness, optimism, uplift, confidence, energy, exuberance, vitality, celebration, warmth, tenderness, nostalgia",Major
+G Minor,8,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, brightness, optimism, uplift",Minor
+G# Minor,9,"mystery, yearning, anticipation, melancholy, introspection, warmth, tenderness, nostalgia, passion, sadness",Minor
+Ab Major,9,"introspection, melancholy, depth, mystery, yearning, anticipation, passion, romance, serenity, peace, contentment",Major
+A Major,10,"vitality, passion, celebration, mystery, yearning, anticipation, introspection, melancholy, depth, brightness, brilliance, grandeur",Major
+A Minor,10,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, vitality, passion, celebration",Minor
+A# Minor,11,"mystery, yearning, anticipation, melancholy, introspection, warmth, tenderness, nostalgia, passion, sadness",Minor
+Bb Major,11,"poignancy, introspection, romance, warmth, tenderness, nostalgia, nobility, majesty, expansiveness, serenity, peace, contentment",Major
+B Major,12,"nobility, majesty, expansiveness, passion, romance, brightness, brilliance, grandeur, confidence, energy, exuberance, vitality",Major
+B Minor,12,"melancholy, introspection, mystery, yearning, anticipation, sadness, depth, nobility, majesty, expansiveness",Minor

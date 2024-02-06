@@ -48,9 +48,26 @@ class MusicGeneration:
         self.file_name = file_name
 
     def generate_midi(self):
-        self.my_midi.addTempo(0, self.time, self.tempo)
+        self.my_midi.addTempo(0, 0, self.tempo)
+        number_loop_max = random.randint(3, 5)
 
-        #ADD creation of each part
+        if self.introduction:
+            self.generate_introduction()
+        
+        for number_loop in range(0, number_loop_max):
+            if self.verse:
+                self.generate_verse()
+            if self.pre_chorus:
+                self.generate_pre_chorus()
+            if number_loop == number_loop_max - 1 and self.bridge:
+                self.generate_bridge()
+            if self.refrain:
+                self.generate_refrain()
+            if self.post_chorus:
+                self.generate_post_chorus()
+
+        if self.conclusion:
+            self.generate_conclusion()
 
         self.create_file()
 

@@ -4,8 +4,7 @@ from datetime import datetime
 import mg_lib
 
 class MusicGeneration:
-    def __init__(self, tempo=-1, feeling="joy"):
-        self.time = 0
+    def __init__(self, tempo=-1, feeling="joy", file_name="output_" + str(datetime.now())):
         self.duration = 1
         self.volume = 100
         self.tempo = tempo
@@ -44,11 +43,17 @@ class MusicGeneration:
         
         if (random.randint(0, 10) <= 6):
             self.conclusion = True
+        self.my_midi = MIDIFile(3)
 
+        self.file_name = file_name
 
     def generate_midi(self):
-        return
-    
+        self.my_midi.addTempo(0, self.time, self.tempo)
+
+        #ADD creation of each part
+
+        self.create_file()
+
     def generate_introduction(self):
         return
     
@@ -71,4 +76,5 @@ class MusicGeneration:
         return
     
     def create_file(self):
-        return
+        with open(self.file_name + ".mid", "wb") as output_file:
+            self.my_midi.writeFile(output_file)

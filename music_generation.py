@@ -2,6 +2,8 @@ from midiutil import MIDIFile
 import random
 from datetime import datetime
 import mg_lib
+import pandas as pd
+
 
 class MusicGeneration:
     def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
@@ -11,41 +13,25 @@ class MusicGeneration:
         if tempo < 0:
             self.tempo = random.randint(40, 200)
         self.feeling = feeling
-        #echellenote
-        #echelletype
         #rytme
+        self.root_degrees, self.name_degrees, self.type, self.list_matching_degrees = mg_lib.get_degrees_by_feeling(feeling)
 
-        self.introduction = False
-        self.verse = False
-        self.pre_chorus = False
-        self.refrain = False
-        self.post_chorus = False
-        self.bridge = False
-        self.conclusion = False
+        self.introduction = self.have_to_generate(5)
+        self.verse = self.have_to_generate(7)
+        self.pre_chorus = self.have_to_generate(2)
+        self.refrain = self.have_to_generate(9)
+        self.post_chorus = self.have_to_generate(1)
+        self.bridge = self.have_to_generate(4)
+        self.conclusion = self.have_to_generate(6)
 
-        if (random.randint(0, 10) <= 5):
-            self.introduction = True
-
-        if (random.randint(0, 10) <= 7):
-            self.verse = True
-        
-        if (random.randint(0, 10) <= 2):
-            self.pre_chorus = True
-        
-        if (random.randint(0, 10) <= 9):
-            self.refrain = True
-
-        if (random.randint(0, 10) <= 1):
-            self.post_chorus = True
-
-        if (random.randint(0, 10) <= 4):
-            self.bridge = True
-        
-        if (random.randint(0, 10) <= 6):
-            self.conclusion = True
         self.my_midi = MIDIFile(3)
 
         self.file_name = file_name
+    
+    def have_to_generate(self, pourcentage):
+        if (random.randint(0, 10) <= pourcentage):
+            return True
+        return False
 
     def generate_midi(self):
         self.my_midi.addTempo(0, 0, self.tempo)
@@ -72,24 +58,31 @@ class MusicGeneration:
         self.create_file()
 
     def generate_introduction(self):
+        print("Introduction")
         return
     
     def generate_verse(self):
+        print("Verse")
         return
     
     def generate_pre_chorus(self):
+        print("Pre chorus")
         return
     
     def generate_refrain(self):
+        print("Refrain")
         return
     
     def generate_post_chorus(self):
+        print("Post chorus")
         return
     
     def generate_bridge(self):
+        print("Bridge")
         return
     
     def generate_conclusion(self):
+        print("Conclusion")
         return
     
     def create_file(self):

@@ -1,5 +1,6 @@
 from midiutil import MIDIFile
 from datetime import datetime
+import copy
 import random
 
 # this is for testing ==========================================================
@@ -96,26 +97,65 @@ def generate_bar():
         return base_swing()
     return base_motown_groove()
 
-def generate_two_bar():
-    bar_a = generate_bar()
-    bar_b = bar_a
-    # change a little bit bar_a into bar_b
-    return [bar_a, bar_b]
+# move one note randomly in an empty space
+# (hand = which array of note is edited)
+def move_note(bar: list, hand = 1):
+    idxs = []
+    empties = []
+    for i in range(len(bar[hand])):
+        if bar[hand][i] != -1:
+            idxs.append(i)
+        else:
+            empties.append(i)
+    if len(empties) == 0:
+        return bar
+    src = random.choice(idxs)
+    dest = random.choice(empties)
+    bar[hand][dest] = bar[hand][src]
+    bar[hand][src] = -1
+    return bar
+
+# add one random note in an empty space
+# (hand = which array of note is edited)
+def add_note(bar: list, hand = 1):
+    empties = []
+    for i in range(len(bar[hand])):
+        if bar[hand][i] == -1:
+            empties.append(i)
+    if len(empties) == 0:
+        return bar
+    new = random.choice(empties)
+    bar[hand][new] = random.randint(0, 48)
+    return bar
 
 # Generate a 4 bar sequence following the motif
 # motif = "aaba" || "abab" || "abac" || "aabb"
 def generate_sentence():
     pass
 
-bar = base_motown_groove()
+# this is for testing ==========================================================
 
-for s in range(4):
+a = generate_bar()
+b = copy.deepcopy(a)
+b = move_note(b)
+b = move_note(b, 3)
+c = copy.deepcopy(b)
+c = move_note(c)
+c = add_note(c, 2)
+c = add_note(c, 2)
+bars = [a, b, a, c]
+
+s = 0
+for bar in bars:
     for x in bar:
         i = 0
         for note in x:
             if note != -1:
                 MyMIDI.addNote(track, channel, note + 36, i + (s * 4), 0.25, volume)
             i += 0.25
+    s += 1
 
 with open("output_" + str(datetime.now()) + ".mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)
+
+# ==============================================================================

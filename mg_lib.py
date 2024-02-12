@@ -2,6 +2,7 @@
 
 from midiutil import MIDIFile
 from note import Note
+from chord import Chord
 from scale import Scale
 import random
 import pandas as pd
@@ -67,13 +68,13 @@ def generate_phrase(root):
 # 1 6 4 5
 # 4 5 3 6
 # 1 5 4 5
-def generate_chord_progression(root):
-    scale = Scale(root, False)
+def generate_chord_progression(root, is_minor, volume, time, instruments): #ajouter is major or minor
+    scale = Scale(root, is_minor)
     res = [
-        scale.getTriad(random.choice([1, 6])),
-        scale.getTriad(random.randint(4, 6)),
-        scale.getTriad(random.randint(1, 6)),
-        scale.getTriad(random.randint(4,5))]
+        Chord(scale.getTriad(random.choice([1, 6])), 4, volume, 0, 0, time, instruments),
+        Chord(scale.getTriad(random.randint(4, 6)), 4, volume, 0, 0, time + 4, instruments),
+        Chord(scale.getTriad(random.randint(1, 6)), 4, volume, 0, 0, time + 8, instruments),
+        Chord(scale.getTriad(random.randint(4,5)), 4, volume, 0, 0, time + 12, instruments)]
     return res
 
 # 36 = kick
@@ -114,14 +115,13 @@ def generate_crazy_drum_bar():
     return res
 
 # chord = the current chord played along the bar
-def generate_melody(chord):
+def generate_melody(chord, volume, time, instruments):
     res = []
-
     for i in range(8):
         if i == 0:
-            res.append(chord[0] + 12)
+            res.append(Note(chord[0] + 12, 0.5, volume, 1, 1, time + 0.5, instruments))
             continue
-        res.append(random.choice(chord) + 12)
+        res.append(Note(random.choice(chord) + 12, 0.5, volume, 1, 1, time + 0.5, instruments))
     return res
 
 def get_degrees_by_feeling(feeling):

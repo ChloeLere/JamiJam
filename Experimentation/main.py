@@ -44,7 +44,7 @@ phrase = mg_lib.generate_phrase(60)
 
 n_phrases = 20
 chord_list = []
-# ChordAdder
+# ChordAdder Harmonie
 for j in range(n_phrases):
     chord_prog = mg_lib.generate_chord_progression(48)
     for chord in chord_prog:
@@ -54,7 +54,7 @@ for j in range(n_phrases):
         i += 4
         chord_list.append(chord)
 
-# RythmAdder
+# RythmAdder Percussions
 i = 0
 drum_bar = mg_lib.generate_crazy_drum_bar()
 for j in range(4 * n_phrases):

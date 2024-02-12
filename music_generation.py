@@ -49,8 +49,9 @@ class MusicGeneration:
 
     def generate_midi(self):
         self.my_midi.addTempo(0, 0, self.tempo)
+        have_refrain = False
         number_loop_max = random.randint(1, 3)
-        list_chord_refrain, list_note_refrain = self.generate_refrain()
+        
 
         if self.introduction:
             self.generate_introduction()
@@ -63,7 +64,11 @@ class MusicGeneration:
             if number_loop == number_loop_max - 1 and self.bridge:
                 self.generate_bridge()
             if self.refrain: 
-                list_chord_refrain, list_note_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain) #update time
+                if have_refrain == False:
+                    list_chord_refrain, list_note_refrain = self.generate_refrain()
+                    have_refrain = True
+                else: 
+                    list_chord_refrain, list_note_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
             if self.post_chorus:
@@ -108,9 +113,22 @@ class MusicGeneration:
         return list_chord_refrain, list_note_refrain
 
     def add_new_refrain(self, list_chord_refrain, list_note_refrain, n_phrase = 4):
-        
-            
-        return list_chord_refrain, list_note_refrain
+        new_list_chord_refrain = []
+        new_list_note_refrain = []
+        t = 0
+        for chord in list_chord_refrain:
+            new_list_chord_refrain.append(Chord(chord.chord, chord.duration, chord.volume, chord.track, chord.channel, self.time + t, chord.instruments))
+            t += chord.duration
+
+        t = 0
+        for note in list_note_refrain:
+            new_list_note_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
+            t += note.duration
+        self.time += 16 * n_phrase
+    
+        print("Repetition refrain")
+
+        return new_list_chord_refrain, new_list_note_refrain
     
     def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Post chorus")

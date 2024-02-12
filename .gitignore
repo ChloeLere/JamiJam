@@ -161,3 +161,7 @@ cython_debug/
 
 # Output file
 output.mid
+
+output_*.mid
+
+*.mid

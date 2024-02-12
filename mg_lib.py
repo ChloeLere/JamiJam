@@ -117,11 +117,14 @@ def generate_crazy_drum_bar():
 # chord = the current chord played along the bar
 def generate_melody(chord, volume, time, instruments):
     res = []
+    t = time
     for i in range(8):
         if i == 0:
-            res.append(Note(chord[0] + 12, 0.5, volume, 1, 1, time + 0.5, instruments))
+            res.append(Note(chord[0] + 12, 0.5, volume, 1, 1, t, instruments))
+            t += 0.5
             continue
-        res.append(Note(random.choice(chord) + 12, 0.5, volume, 1, 1, time + 0.5, instruments))
+        res.append(Note(random.choice(chord) + 12, 0.5, volume, 1, 1, t, instruments))
+        t += 0.5
     return res
 
 def get_degrees_by_feeling(feeling):

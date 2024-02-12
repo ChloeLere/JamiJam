@@ -15,8 +15,8 @@ from chord import Chord
 
 class MusicGeneration:
     def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
-        self.chord_list = [Chord]
-        self.note_list = [Note]
+        self.chord_list = []
+        self.note_list = []
         self.duration = 1
         self.volume = 100
         self.tempo = tempo
@@ -94,8 +94,8 @@ class MusicGeneration:
         #generate_harmonie : generate_chord_progression 
         #generate_bass : osef
         #generate_lead : generate_melody -> prend le resultat de harmonie
-        list_chord_refrain = [Chord]
-        list_note_refrain = [Note]
+        list_chord_refrain = []
+        list_note_refrain = []
     
         for n in range(0, n_phrases):
             harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, "refrain")
@@ -103,7 +103,7 @@ class MusicGeneration:
             for y in range(4):
                 list_note_refrain += mg_lib.generate_melody(harmonie[y].chord, self.volume, self.time, "refrain")
                 self.time += 4
-
+    
         print("Refrain")
         return list_chord_refrain, list_note_refrain
 
@@ -125,6 +125,13 @@ class MusicGeneration:
         return
     
     def create_file(self):
-        
+        print(self.chord_list[0].chord)
+        for chord in self.chord_list:
+            for note in chord.chord:
+                self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
+           
+        for note in self.note_list:
+            self.my_midi.addNote(note.track, note.channel, note.pitch + 48, note.time, note.duration, note.volume)
+    
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)

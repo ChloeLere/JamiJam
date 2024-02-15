@@ -2,6 +2,7 @@ from midiutil import MIDIFile
 from datetime import datetime
 import copy
 import random
+from note import Note
 
 # this is for testing ==========================================================
 track    = 0
@@ -130,7 +131,7 @@ def add_note(bar: list, hand = 1):
 
 # Generate a 4 bar sequence following the motif
 # motif = "aaba" || "abab" || "abac" || "aabb"
-def generate_sentence():
+def generate_sentence(time, track = 0):
     a = generate_bar()
     b = copy.deepcopy(a)
     b = move_note(b)
@@ -139,36 +140,49 @@ def generate_sentence():
     c = move_note(c)
     c = add_note(c, 2)
     c = add_note(c, 2)
+    sentence = []
     r = random.randrange(0, 3)
     match r:
+        case 0:
+            sentence = [a, a, b, a]
         case 1:
-            return [a, a, b, a]
+            sentence = [a, b, a, b]
         case 2:
-            return [a, b, a, b]
+            sentence = [a, b, a, c]
         case 3:
-            return [a, b, a, c]
-        case 4:
-            return [a, a, b, b]
-    return [a, b, a, b]
+            sentence = [a, a, b, b]
+    i = time
+    res = []
+    for bar in sentence:
+        res += convert_bar_to_notes(bar, time, track)
+        time += 4
+    return res
+
+def convert_bar_to_notes(bar, time, track = 0):
+    return map(lambda member: convert_pitch_to_notes(member, time, track), bar)
+
+def convert_pitch_to_notes(pitch_list: list, time, track = 0):
+    res = []
+    i = time
+    for pitch in pitch_list:
+        if pitch != -1:
+            res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
+        i += 0.25
+    return res
 
 def append_drums_to_midi(drum_part, midi_file: MIDIFile, time, track = 0):
     current_time = time
     for bar in drum_part:
-        for member in bar:
-            i = 0
-            for note in member:
-                if note != -1:
-                    midi_file.addNote(track, 9, note + 36, current_time + i, 0.25, 100)
-                i += 0.25
-        current_time += 4
+        for note in bar:
+            midi_file.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
         
 
 # this is for testing ==========================================================
 
-bars = generate_sentence()
-
-append_drums_to_midi(bars, MyMIDI, time)
-print(time)
+bars = generate_sentence(0)
+for bar in bars:
+    for note in bar:
+        MyMIDI.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
 
 with open("output_" + str(datetime.now()) + ".mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)

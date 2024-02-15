@@ -1,3 +1,4 @@
+from midiutil import MIDIFile
 
 class Note():
     def __init__(self, pitch, duration, volume, track, channel, time, instruments = None) -> None:
@@ -9,3 +10,8 @@ class Note():
         self.time = time
 
         self.instruments = instruments
+    
+    def add_to_midi(self, midi_file: MIDIFile):
+        if self.pitch == -1:
+            return
+        midi_file.addNote(self.track, self.channel, self.pitch, self.time, self.duration, self.volume)

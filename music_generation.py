@@ -5,7 +5,7 @@ import mg_lib
 import pandas as pd
 from note import Note
 from chord import Chord
-
+import drum_generator
 
 #false -> major
 #true -> mminor
@@ -17,6 +17,7 @@ class MusicGeneration:
     def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
         self.chord_list = []
         self.note_list = []
+        self.drums_list = []
         self.duration = 1
         self.volume = 100
         self.tempo = tempo
@@ -65,12 +66,13 @@ class MusicGeneration:
                 self.generate_bridge()
             if self.refrain: 
                 if have_refrain == False:
-                    list_chord_refrain, list_note_refrain = self.generate_refrain()
+                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
                     have_refrain = True
                 else: 
-                    list_chord_refrain, list_note_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain)
+                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
+                self.drums_list += list_drums_refrain
             if self.post_chorus:
                 self.generate_post_chorus()
 
@@ -101,20 +103,24 @@ class MusicGeneration:
         #generate_lead : generate_melody -> prend le resultat de harmonie
         list_chord_refrain = []
         list_note_refrain = []
+        list_drums_refrain = []
     
         for n in range(0, n_phrases):
             harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, "refrain")
             list_chord_refrain += harmonie
+            drums = drum_generator.generate_sentence(self.time, 2)
+            list_drums_refrain += drums
             for y in range(4):
                 list_note_refrain += mg_lib.generate_melody(harmonie[y].chord, self.volume, self.time, "refrain")
                 self.time += 4
     
         print("Refrain")
-        return list_chord_refrain, list_note_refrain
+        return list_chord_refrain, list_note_refrain, list_drums_refrain
 
-    def add_new_refrain(self, list_chord_refrain, list_note_refrain, n_phrase = 4):
+    def add_new_refrain(self, list_chord_refrain, list_note_refrain, list_drums, n_phrase = 4):
         new_list_chord_refrain = []
         new_list_note_refrain = []
+        new_list_drums_refrain = []
         t = 0
         for chord in list_chord_refrain:
             new_list_chord_refrain.append(Chord(chord.chord, chord.duration, chord.volume, chord.track, chord.channel, self.time + t, chord.instruments))
@@ -124,11 +130,21 @@ class MusicGeneration:
         for note in list_note_refrain:
             new_list_note_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
             t += note.duration
+
+        t = 0
+        for bar in list_drums:
+            bar_t = t
+            for note in bar:
+                print(note)
+                if note.pitch != -1:
+                    new_list_drums_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
+                bar_t += 0.25
+            t += 4
         self.time += 16 * n_phrase
     
         print("Repetition refrain")
 
-        return new_list_chord_refrain, new_list_note_refrain
+        return new_list_chord_refrain, new_list_note_refrain, new_list_drums_refrain
     
     def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Post chorus")
@@ -143,7 +159,6 @@ class MusicGeneration:
         return
     
     def create_file(self):
-        print(self.chord_list[0].chord)
         for chord in self.chord_list:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
@@ -151,5 +166,8 @@ class MusicGeneration:
         for note in self.note_list:
             self.my_midi.addNote(note.track, note.channel, note.pitch + 48, note.time, note.duration, note.volume)
     
+        for bar in self.drums_list:
+            for note in bar:
+                self.my_midi.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)

@@ -4,20 +4,6 @@ import copy
 import random
 from note import Note
 
-# this is for testing ==========================================================
-track    = 0
-channel  = 9
-time     = 0    # In beats
-duration = 1    # In beats
-tempo    = 100   # In BPM
-volume   = 100  # 0-127, as per the MIDI standard
-
-MyMIDI = MIDIFile(1)  # One track, defaults to format 1 (tempo track is created
-                      # automatically)
-MyMIDI.addTempo(0, time, tempo)
-
-# ==============================================================================
-
 # returns something like: {
 # right_hand: [int:16],
 # left_hand: [int:16],
@@ -108,7 +94,7 @@ def move_note(bar: list, hand = 1):
             idxs.append(i)
         else:
             empties.append(i)
-    if len(empties) == 0:
+    if empties == [] or idxs == []:
         return bar
     src = random.choice(idxs)
     dest = random.choice(empties)
@@ -123,7 +109,7 @@ def add_note(bar: list, hand = 1):
     for i in range(len(bar[hand])):
         if bar[hand][i] == -1:
             empties.append(i)
-    if len(empties) == 0:
+    if empties == []:
         return bar
     new = random.choice(empties)
     bar[hand][new] = random.randint(0, 48)
@@ -165,8 +151,7 @@ def convert_pitch_to_notes(pitch_list: list, time, track = 0):
     res = []
     i = time
     for pitch in pitch_list:
-        if pitch != -1:
-            res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
+        res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
         i += 0.25
     return res
 
@@ -176,15 +161,3 @@ def append_drums_to_midi(drum_part, midi_file: MIDIFile, time, track = 0):
         for note in bar:
             midi_file.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
         
-
-# this is for testing ==========================================================
-
-bars = generate_sentence(0)
-for bar in bars:
-    for note in bar:
-        MyMIDI.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
-
-with open("output_" + str(datetime.now()) + ".mid", "wb") as output_file:
-    MyMIDI.writeFile(output_file)
-
-# ==============================================================================

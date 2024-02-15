@@ -131,19 +131,30 @@ def add_note(bar: list, hand = 1):
 # Generate a 4 bar sequence following the motif
 # motif = "aaba" || "abab" || "abac" || "aabb"
 def generate_sentence():
-    pass
+    a = generate_bar()
+    b = copy.deepcopy(a)
+    b = move_note(b)
+    b = move_note(b, 3)
+    c = copy.deepcopy(b)
+    c = move_note(c)
+    c = add_note(c, 2)
+    c = add_note(c, 2)
+    r = random.randrange(0, 3)
+    match r:
+        case 1:
+            return [a, a, b, a]
+        case 2:
+            return [a, b, a, b]
+        case 3:
+            return [a, b, a, c]
+        case 4:
+            return [a, a, b, b]
+    return [a, b, a, b]
+
 
 # this is for testing ==========================================================
 
-a = generate_bar()
-b = copy.deepcopy(a)
-b = move_note(b)
-b = move_note(b, 3)
-c = copy.deepcopy(b)
-c = move_note(c)
-c = add_note(c, 2)
-c = add_note(c, 2)
-bars = [a, b, a, c]
+bars = generate_sentence()
 
 s = 0
 for bar in bars:

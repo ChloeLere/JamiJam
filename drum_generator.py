@@ -13,7 +13,7 @@ volume   = 100  # 0-127, as per the MIDI standard
 
 MyMIDI = MIDIFile(1)  # One track, defaults to format 1 (tempo track is created
                       # automatically)
-MyMIDI.addTempo(10, time, tempo)
+MyMIDI.addTempo(0, time, tempo)
 
 # ==============================================================================
 
@@ -151,20 +151,24 @@ def generate_sentence():
             return [a, a, b, b]
     return [a, b, a, b]
 
+def append_drums_to_midi(drum_part, midi_file: MIDIFile, time, track = 0):
+    current_time = time
+    for bar in drum_part:
+        for member in bar:
+            i = 0
+            for note in member:
+                if note != -1:
+                    midi_file.addNote(track, 9, note + 36, current_time + i, 0.25, 100)
+                i += 0.25
+        current_time += 4
+        
 
 # this is for testing ==========================================================
 
 bars = generate_sentence()
 
-s = 0
-for bar in bars:
-    for x in bar:
-        i = 0
-        for note in x:
-            if note != -1:
-                MyMIDI.addNote(track, channel, note + 36, i + (s * 4), 0.25, volume)
-            i += 0.25
-    s += 1
+append_drums_to_midi(bars, MyMIDI, time)
+print(time)
 
 with open("output_" + str(datetime.now()) + ".mid", "wb") as output_file:
     MyMIDI.writeFile(output_file)

@@ -135,7 +135,6 @@ class MusicGeneration:
         for bar in list_drums:
             bar_t = t
             for note in bar:
-                print(note)
                 if note.pitch != -1:
                     new_list_drums_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
                 bar_t += 0.25
@@ -167,7 +166,9 @@ class MusicGeneration:
             self.my_midi.addNote(note.track, note.channel, note.pitch + 48, note.time, note.duration, note.volume)
     
         for bar in self.drums_list:
-            for note in bar:
-                self.my_midi.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
+            for part in bar:
+                for note in part:
+                    note.add_to_midi(self.my_midi)
+        
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)

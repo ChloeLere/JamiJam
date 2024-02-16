@@ -140,7 +140,7 @@ def generate_sentence(time, track = 0):
     i = time
     res = []
     for bar in sentence:
-        res += convert_bar_to_notes(bar, time, track)
+        res.append(convert_bar_to_notes(bar, time, track))
         time += 4
     return res
 
@@ -151,10 +151,13 @@ def convert_pitch_to_notes(pitch_list: list, time, track = 0):
     res = []
     i = time
     for pitch in pitch_list:
+        if pitch != -1:
+            pitch += 36
         res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
         i += 0.25
     return res
 
+# Outdated
 def append_drums_to_midi(drum_part, midi_file: MIDIFile, time, track = 0):
     current_time = time
     for bar in drum_part:

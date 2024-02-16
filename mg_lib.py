@@ -77,43 +77,6 @@ def generate_chord_progression(root, is_minor, volume, time, instruments): #ajou
         Chord(scale.getTriad(random.randint(4,5)), 4, volume, 0, 0, time + 12, instruments)]
     return res
 
-# 36 = kick
-# 38 = snare
-# 42 = hihat (closed)
-# -1 = silence
-# every 1/4 must be filled
-def generate_drum_bar():
-    res = []
-    for i in range(4):
-        for j in range(4):
-            if i == 0 and j == 0:
-                res.append(36)
-            elif j == 0:
-                if random.randint(0, 1) == 1:
-                    res.append(38)
-                else:
-                    res.append(42)
-            else:
-                if random.randint(0, 1) == 1:
-                    res.append(42)
-                else:
-                    res.append(-1)
-    return res
-
-def generate_crazy_drum_bar():
-    res = []
-    for i in range(16):
-        r = random.randint(0, 4)
-        if r == 1:
-            res.append(36)
-        elif r == 2:
-            res.append(38)
-        elif r == 3:
-            res.append(42)
-        elif r == 4:
-            res.append(-1)
-    return res
-
 # chord = the current chord played along the bar
 def generate_melody(chord, volume, time, instruments):
     res = []

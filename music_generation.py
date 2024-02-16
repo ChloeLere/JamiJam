@@ -6,12 +6,11 @@ import pandas as pd
 from note import Note
 from chord import Chord
 import drum_generator
+import melody_generator
 
 #false -> major
-#true -> mminor
+#true -> minor
 #pour scale
-
-
 
 class MusicGeneration:
     def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
@@ -110,9 +109,8 @@ class MusicGeneration:
             list_chord_refrain += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
             list_drums_refrain += drums
-            for y in range(4):
-                list_note_refrain += mg_lib.generate_melody(harmonie[y].chord, self.volume, self.time, "refrain")
-                self.time += 4
+            list_note_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+            self.time += 16
     
         print("Refrain")
         return list_chord_refrain, list_note_refrain, list_drums_refrain
@@ -161,10 +159,13 @@ class MusicGeneration:
         for chord in self.chord_list:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
-           
-        for note in self.note_list:
-            self.my_midi.addNote(note.track, note.channel, note.pitch + 48, note.time, note.duration, note.volume)
-    
+
+        for bar in self.note_list:
+            for note in bar:
+                print(note.time, end=" ")
+                note.add_to_midi(self.my_midi)
+            print("")
+
         for bar in self.drums_list:
             for part in bar:
                 for note in part:

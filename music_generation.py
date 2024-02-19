@@ -67,6 +67,8 @@ class MusicGeneration:
                 if have_refrain == False:
                     list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
                     have_refrain = True
+                else:
+                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
                 self.drums_list += list_drums_refrain
@@ -123,17 +125,19 @@ class MusicGeneration:
             t += chord.duration
 
         t = 0
-        for note in list_note_refrain:
-            new_list_note_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
-            t += note.duration
+        for bar in list_note_refrain:
+            for note in bar:
+                new_list_note_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
+                t += note.duration
 
         t = 0
         for bar in list_drums:
             bar_t = t
-            for note in bar:
-                if note.pitch != -1:
-                    new_list_drums_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
-                bar_t += 0.25
+            for seq in bar:
+                for note in seq:
+                    if note.pitch != -1:
+                        new_list_drums_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
+                    bar_t += 0.25
             t += 4
         self.time += 16 * n_phrase
     

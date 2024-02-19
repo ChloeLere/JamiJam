@@ -27,9 +27,7 @@ class MusicGeneration:
         #rytme
         self.root_degrees, self.name_degrees, type_note, self.list_matching_degrees = mg_lib.get_degrees_by_feeling(feeling)
 
-        self.is_minor = True
-        if (type_note == "Major"):
-            self.is_minor = False
+        self.is_minor = (type_note == "Minor")
         self.introduction = self.have_to_generate(5)
         self.verse = True
         self.pre_chorus = self.have_to_generate(2)

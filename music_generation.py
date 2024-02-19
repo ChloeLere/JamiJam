@@ -51,7 +51,9 @@ class MusicGeneration:
         self.my_midi.addTempo(0, 0, self.tempo)
         have_refrain = False
         number_loop_max = random.randint(1, 3)
-        
+        list_chord_refrain = []
+        list_note_refrain = []
+        list_drums_refrain = []
 
         if self.introduction:
             self.generate_introduction()
@@ -67,8 +69,6 @@ class MusicGeneration:
                 if have_refrain == False:
                     list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
                     have_refrain = True
-                else: 
-                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
                 self.drums_list += list_drums_refrain
@@ -160,11 +160,10 @@ class MusicGeneration:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
 
+        print("nb bar:", len(self.note_list))
         for bar in self.note_list:
             for note in bar:
-                print(note.time, end=" ")
                 note.add_to_midi(self.my_midi)
-            print("")
 
         for bar in self.drums_list:
             for part in bar:
@@ -173,3 +172,4 @@ class MusicGeneration:
         
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)
+        print("DONE===========================================================")

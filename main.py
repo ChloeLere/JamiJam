@@ -3,6 +3,7 @@ from datetime import datetime
 from music_generation import MusicGeneration
 from appJar import gui
 import pandas as pd
+import random
 
 win = gui('Test')
 
@@ -29,6 +30,7 @@ def main():
     win.addLabelOptionBox("Emotion : ", get_list_emotion())
     win.addLabelEntry("File name : ")
     win.addLabelSpinBoxRange("Tempo : ", 40, 200)
+    win.setSpinBox("Tempo : ", int(random.gauss(100, 10)))
 
     win.addButton("Generate", generate)
     win.go()

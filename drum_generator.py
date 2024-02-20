@@ -145,7 +145,7 @@ def generate_sentence(time, track = 0):
     return res
 
 def convert_bar_to_notes(bar, time, track = 0):
-    return map(lambda member: convert_pitch_to_notes(member, time, track), bar)
+    return list(map(lambda member: convert_pitch_to_notes(member, time, track), bar))
 
 def convert_pitch_to_notes(pitch_list: list, time, track = 0):
     res = []

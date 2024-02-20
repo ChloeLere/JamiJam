@@ -126,19 +126,25 @@ class MusicGeneration:
 
         t = 0
         for bar in list_note_refrain:
+            bar_list = []
             for note in bar:
-                new_list_note_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
+                bar_list.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
                 t += note.duration
+            new_list_note_refrain.append(bar_list)
+        
 
         t = 0
         for bar in list_drums:
             bar_t = t
+            new_bar = []
             for seq in bar:
+                new_seq = []
                 for note in seq:
-                    if note.pitch != -1:
-                        new_list_drums_refrain.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
+                    new_seq.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
                     bar_t += 0.25
+                new_bar.append(new_seq)
             t += 4
+            new_list_drums_refrain.append(new_bar)
         self.time += 16 * n_phrase
     
         print("Repetition refrain")
@@ -161,8 +167,7 @@ class MusicGeneration:
         for chord in self.chord_list:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
-
-        print("nb bar:", len(self.note_list))
+    
         for bar in self.note_list:
             for note in bar:
                 note.add_to_midi(self.my_midi)

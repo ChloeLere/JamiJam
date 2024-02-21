@@ -206,10 +206,39 @@ class MusicGeneration:
     
     def generate_conclusion(self, n_phrases = 1):# 1 ou 2
         print("Conclusion")
+        harmonie_list_tmp = []
+        drums_list_tmp = []
+        note_list_tmp = []
         degrees = self.list_matching_degrees[self.list_matching_degrees['name'] != self.name_degrees].sample(n=1)["root"].values[0]
         for n in range(0, n_phrases):
-            self.generic_generation("conclusion", degrees)
-        return
+            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "conclusion")
+            harmonie_list_tmp += harmonie
+            drums = drum_generator.generate_sentence(self.time, 2)
+            drums_list_tmp += drums
+            note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+            self.time += 16
+
+        volume = self.volume
+        for chord in harmonie_list_tmp:
+            chord.volume = volume
+            volume -= 15
+            
+        volume = self.volume
+        for bar in note_list_tmp: 
+            for note in bar:
+                note.volume = volume
+            volume -= 15
+
+        volume = self.volume
+        for bar in drums_list_tmp:
+            for part in bar:
+                for note in part:
+                    note.volume = volume
+            volume -= 15
+
+        self.chord_list += harmonie_list_tmp
+        self.drums_list += drums_list_tmp
+        self.note_list += note_list_tmp
     
     def create_file(self):
 

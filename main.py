@@ -5,7 +5,7 @@ from appJar import gui
 import pandas as pd
 import random
 
-win = gui('Test')
+win = gui('JamiJam')
 
 def get_list_emotion():
     file_result = pd.read_csv("./data/MusicalScaleTable.csv")
@@ -25,7 +25,9 @@ def generate(btn):
     music_gen.generate_midi()
 
 def main():
-    win.addLabel("f1","Name is a musique generator.")
+    win.setIcon("./resources/transparent_logo.gif")
+    win.addLabel("f1","JamiJam is a musique generator.")
+    win.addImage("logo", "./resources/transparent_logo.gif")
     win.addLabel("f2","You can choose to modify some option before genereting your music")
     win.addLabelOptionBox("Emotion : ", get_list_emotion())
     win.addLabelEntry("File name : ")

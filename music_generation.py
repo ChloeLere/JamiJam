@@ -74,8 +74,8 @@ class MusicGeneration:
                 if have_refrain == False:
                     list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
                     have_refrain = True
-                else:
-                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
+                #else:
+                #    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
                 self.drums_list += list_drums_refrain
@@ -87,18 +87,33 @@ class MusicGeneration:
 
         self.create_file()
 
+    def generic_generation(self, name_part):
+        harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, name_part)
+        self.chord_list += harmonie
+        drums = drum_generator.generate_sentence(self.time, 2)
+        self.drums_list += drums
+        self.note_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+        self.time += 16
+        print("generic generation for : ", name_part)
+        return
+    
+
     def generate_introduction(self, n_phrases = 1): #entre 1 ou 2
         #The introduction may also be based around the chords used in the verse, chorus, or bridge
         print("Introduction")
-        return
+        for n in range(0, n_phrases):
+            self.generic_generation("intro")
     
     def generate_verse(self, n_phrases = 4): # entre 2 et 8
         #an AABB or ABAB rhyme scheme.
         print("Verse")
-        return
+        for n in range(0, n_phrases):
+            self.generic_generation("verse")
     
     def generate_pre_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Pre chorus")
+        for n in range(0, n_phrases):
+            self.generic_generation("pre")
         return
     
     def generate_refrain(self, n_phrases = 4): #entre 2 et 8
@@ -160,22 +175,29 @@ class MusicGeneration:
     
     def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Post chorus")
+        for n in range(0, n_phrases):
+            self.generic_generation("post")
         return
     
     def generate_bridge(self, n_phrases = 4):  #entre 2 et 8
         print("Bridge")
+        for n in range(0, n_phrases):
+            self.generic_generation("bridge")
         return
     
     def generate_conclusion(self, n_phrases = 1):# 1 ou 2
         print("Conclusion")
+        for n in range(0, n_phrases):
+            self.generic_generation("conclusion")
         return
     
     def create_file(self):
+
         for chord in self.chord_list:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
     
-        for bar in self.note_list:
+        for bar in self.note_list: #ERROR PROVOQUE ICI
             for note in bar:
                 note.add_to_midi(self.my_midi)
 
@@ -186,4 +208,4 @@ class MusicGeneration:
         
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)
-        print("DONE===========================================================")
+        print("DONE===========================================================", self.time)

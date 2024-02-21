@@ -114,6 +114,10 @@ class MusicGeneration:
             note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
             self.time += 16
         
+        if (random.randint(0, 10) <= 5):
+            drums_list_tmp = drums_list_tmp[2:]
+        else:
+            note_list_tmp = note_list_tmp[2:]
 
         self.chord_list += harmonie_list_tmp
         self.drums_list += drums_list_tmp

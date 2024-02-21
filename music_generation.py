@@ -30,8 +30,8 @@ class MusicGeneration:
         self.is_minor = (type_note == "Minor")
         self.introduction = self.have_to_generate(5)
         self.verse = True
-        self.pre_chorus = self.have_to_generate(2)
         self.refrain = self.have_to_generate(9)
+        self.pre_chorus = self.have_to_generate(2)
         self.post_chorus = self.have_to_generate(1)
         self.bridge = self.have_to_generate(4)
         self.conclusion = self.have_to_generate(6)
@@ -39,6 +39,13 @@ class MusicGeneration:
         self.my_midi = MIDIFile(3)
 
         self.file_name = file_name
+    
+    def have_to_genrate_post_pre(self, pourcentage):
+        if (self.refrain == False):
+            return False
+        if (random.randint(0, 10) <= pourcentage):
+            return True
+        return False
     
     def have_to_generate(self, pourcentage):
         if (random.randint(0, 10) <= pourcentage):

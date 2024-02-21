@@ -74,8 +74,8 @@ class MusicGeneration:
                 if have_refrain == False:
                     list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
                     have_refrain = True
-                #else:
-                #    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
+                else:
+                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
                 self.drums_list += list_drums_refrain
@@ -196,11 +196,11 @@ class MusicGeneration:
         for chord in self.chord_list:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
-    
+
         for bar in self.note_list: #ERROR PROVOQUE ICI
             for note in bar:
                 note.add_to_midi(self.my_midi)
-
+    
         for bar in self.drums_list:
             for part in bar:
                 for note in part:

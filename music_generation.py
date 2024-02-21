@@ -31,8 +31,8 @@ class MusicGeneration:
         self.introduction = self.have_to_generate(5)
         self.verse = True
         self.refrain = self.have_to_generate(9)
-        self.pre_chorus = self.have_to_generate(2)
-        self.post_chorus = self.have_to_generate(1)
+        self.pre_chorus = self.have_to_genrate_post_pre(2)
+        self.post_chorus = self.have_to_genrate_post_pre(1)
         self.bridge = self.have_to_generate(4)
         self.conclusion = self.have_to_generate(6)
 

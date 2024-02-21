@@ -18,7 +18,7 @@ def get_list_emotion():
 def generate(btn):
     emotion = win.getOptionBox("Emotion : ")
     filename = win.getEntry("File name : ")
-    tempo = win.getSpinBox("Tempo : ") #faire en sorte de pouvoir avoir un tempo aleatoir
+    tempo = win.getSpinBox("Tempo : ")
     if filename == "":
         filename = "output_" + str(datetime.now())
     music_gen = MusicGeneration(int(tempo), emotion, filename) 

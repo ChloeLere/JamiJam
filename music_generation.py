@@ -87,33 +87,48 @@ class MusicGeneration:
 
         self.create_file()
 
-    def generic_generation(self, name_part):
-        harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, name_part)
+    def generic_generation(self, name_part, degrees):
+        harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, name_part)
         self.chord_list += harmonie
         drums = drum_generator.generate_sentence(self.time, 2)
         self.drums_list += drums
         self.note_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
         self.time += 16
-        print("generic generation for : ", name_part)
         return
     
 
     def generate_introduction(self, n_phrases = 1): #entre 1 ou 2
         #The introduction may also be based around the chords used in the verse, chorus, or bridge
+        #retirer les deux premiere bar d'un instrument aléatoir (pas les chord)
         print("Introduction")
+        degrees = self.list_matching_degrees[self.list_matching_degrees['name'] != self.name_degrees].sample(n=1)["root"].values[0]
+        harmonie_list_tmp = []
+        drums_list_tmp = []
+        note_list_tmp = []
+
         for n in range(0, n_phrases):
-            self.generic_generation("intro")
+            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "introduction")
+            harmonie_list_tmp += harmonie
+            drums = drum_generator.generate_sentence(self.time, 2)
+            drums_list_tmp += drums
+            note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+            self.time += 16
+        
+
+        self.chord_list += harmonie_list_tmp
+        self.drums_list += drums_list_tmp
+        self.note_list += note_list_tmp
     
     def generate_verse(self, n_phrases = 4): # entre 2 et 8
         #an AABB or ABAB rhyme scheme.
         print("Verse")
         for n in range(0, n_phrases):
-            self.generic_generation("verse")
+            self.generic_generation("verse", self.root_degrees)
     
     def generate_pre_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Pre chorus")
         for n in range(0, n_phrases):
-            self.generic_generation("pre")
+            self.generic_generation("pre", self.root_degrees)
         return
     
     def generate_refrain(self, n_phrases = 4): #entre 2 et 8
@@ -176,19 +191,20 @@ class MusicGeneration:
     def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Post chorus")
         for n in range(0, n_phrases):
-            self.generic_generation("post")
+            self.generic_generation("post", self.root_degrees)
         return
     
     def generate_bridge(self, n_phrases = 4):  #entre 2 et 8
         print("Bridge")
         for n in range(0, n_phrases):
-            self.generic_generation("bridge")
+            self.generic_generation("bridge", self.root_degrees)
         return
     
     def generate_conclusion(self, n_phrases = 1):# 1 ou 2
         print("Conclusion")
+        degrees = self.list_matching_degrees[self.list_matching_degrees['name'] != self.name_degrees].sample(n=1)["root"].values[0]
         for n in range(0, n_phrases):
-            self.generic_generation("conclusion")
+            self.generic_generation("conclusion", degrees)
         return
     
     def create_file(self):

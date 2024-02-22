@@ -180,9 +180,10 @@ class MusicGeneration:
             new_bar = []
             for seq in bar:
                 new_seq = []
+                seq_t = bar_t
                 for note in seq:
-                    new_seq.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + bar_t, note.instruments))
-                    bar_t += 0.25
+                    new_seq.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + seq_t, note.instruments))
+                    seq_t += 0.25
                 new_bar.append(new_seq)
             t += 4
             new_list_drums_refrain.append(new_bar)

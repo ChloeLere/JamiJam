@@ -17,6 +17,7 @@ class MusicGeneration:
         self.chord_list = []
         self.note_list = []
         self.drums_list = []
+        self.bass_list = []
         self.duration = 1
         self.volume = 100
         self.tempo = tempo
@@ -36,7 +37,7 @@ class MusicGeneration:
         self.bridge = self.have_to_generate(4)
         self.conclusion = self.have_to_generate(6)
 
-        self.my_midi = MIDIFile(3)
+        self.my_midi = MIDIFile(4)
 
         self.file_name = file_name
     
@@ -105,6 +106,7 @@ class MusicGeneration:
         harmonie_list_tmp = []
         drums_list_tmp = []
         note_list_tmp = []
+        bass_list_tmp = []
 
         for n in range(0, n_phrases):
             harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "introduction")
@@ -112,6 +114,7 @@ class MusicGeneration:
             drums = drum_generator.generate_sentence(self.time, 2)
             drums_list_tmp += drums
             note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+            bass_list_tmp += melody_generator.generate_bass(harmonie, drums, self.volume, self.time, 36)
             self.time += 16
         
         if (random.randint(0, 10) <= 5):
@@ -122,6 +125,7 @@ class MusicGeneration:
         self.chord_list += harmonie_list_tmp
         self.drums_list += drums_list_tmp
         self.note_list += note_list_tmp
+        self.bass_list += bass_list_tmp
     
     def generate_verse(self, n_phrases = 4): # entre 2 et 8
         #an AABB or ABAB rhyme scheme.
@@ -248,6 +252,10 @@ class MusicGeneration:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
 
         for bar in self.note_list: #ERROR PROVOQUE ICI
+            for note in bar:
+                note.add_to_midi(self.my_midi)
+        
+        for bar in self.bass_list:
             for note in bar:
                 note.add_to_midi(self.my_midi)
     

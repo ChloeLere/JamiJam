@@ -60,7 +60,8 @@ class MusicGeneration:
         list_chord_refrain = []
         list_note_refrain = []
         list_drums_refrain = []
-
+        list_base_refrain = []
+        
         if self.introduction:
             self.generate_introduction()
         
@@ -73,13 +74,14 @@ class MusicGeneration:
                 self.generate_bridge()
             if self.refrain: 
                 if have_refrain == False:
-                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.generate_refrain()
+                    list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain = self.generate_refrain()
                     have_refrain = True
                 else:
-                    list_chord_refrain, list_note_refrain, list_drums_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain)
+                    list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain = self.add_new_refrain(list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain)
                 self.chord_list += list_chord_refrain
                 self.note_list += list_note_refrain
                 self.drums_list += list_drums_refrain
+                self.bass_list += list_base_refrain
             if self.post_chorus:
                 self.generate_post_chorus()
 
@@ -114,7 +116,7 @@ class MusicGeneration:
             drums = drum_generator.generate_sentence(self.time, 2)
             drums_list_tmp += drums
             note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
-            bass_list_tmp += melody_generator.generate_bass(harmonie, drums, self.volume, self.time, 36)
+            bass_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36)
             self.time += 16
         
         rand = random.randint(0, 10)
@@ -151,6 +153,7 @@ class MusicGeneration:
         list_chord_refrain = []
         list_note_refrain = []
         list_drums_refrain = []
+        list_base_refrain = []
     
         for n in range(0, n_phrases):
             harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, "refrain")
@@ -158,15 +161,18 @@ class MusicGeneration:
             drums = drum_generator.generate_sentence(self.time, 2)
             list_drums_refrain += drums
             list_note_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+            list_base_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36)
             self.time += 16
     
         print("Refrain")
-        return list_chord_refrain, list_note_refrain, list_drums_refrain
+        return list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain
 
-    def add_new_refrain(self, list_chord_refrain, list_note_refrain, list_drums, n_phrase = 4):
+    def add_new_refrain(self, list_chord_refrain, list_note_refrain, list_drums, list_base_refrain, n_phrase = 4):
         new_list_chord_refrain = []
         new_list_note_refrain = []
         new_list_drums_refrain = []
+        new_list_base_refrain = []
+
         t = 0
         for chord in list_chord_refrain:
             new_list_chord_refrain.append(Chord(chord.chord, chord.duration, chord.volume, chord.track, chord.channel, self.time + t, chord.instruments))
@@ -194,11 +200,24 @@ class MusicGeneration:
                 new_bar.append(new_seq)
             t += 4
             new_list_drums_refrain.append(new_bar)
+
+
+
+        t = 0
+        for bar in list_base_refrain:
+            new_bar = []
+            for note in bar:
+                new_bar.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
+                t += note.duration
+            t += 4
+            new_list_base_refrain.append(new_bar)
+
+
         self.time += 16 * n_phrase
     
         print("Repetition refrain")
 
-        return new_list_chord_refrain, new_list_note_refrain, new_list_drums_refrain
+        return new_list_chord_refrain, new_list_note_refrain, new_list_drums_refrain, new_list_base_refrain
     
     def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
         print("Post chorus")

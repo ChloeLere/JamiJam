@@ -97,6 +97,7 @@ class MusicGeneration:
         drums = drum_generator.generate_sentence(self.time, 2)
         self.drums_list += drums
         self.note_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
+        self.bass_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
         self.time += 16
         return
     

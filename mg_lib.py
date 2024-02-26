@@ -31,8 +31,6 @@ def minor_scale(root):
             res.append(res[len(res) - 1] + 1)
     return res
 
-# Generate a 4 beats bar
-# scale is a list of allowed pitches
 def generate_bar(scale):
     res = []
 
@@ -63,12 +61,7 @@ def generate_phrase(root):
     bar4 = generate_bar(major_scale(root))
     return bar1 + bar2 + bar3 + bar4
 
-# 1 5 6 4
-# 6 4 1 5
-# 1 6 4 5
-# 4 5 3 6
-# 1 5 4 5
-def generate_chord_progression(root, is_minor, volume, time, instruments): #ajouter is major or minor
+def generate_chord_progression(root, is_minor, volume, time, instruments):
     scale = Scale(root, is_minor)
     res = [
         Chord(scale.getTriad(random.choice([1, 6])), 4, volume, 0, 0, time, instruments),
@@ -77,7 +70,6 @@ def generate_chord_progression(root, is_minor, volume, time, instruments): #ajou
         Chord(scale.getTriad(random.randint(4,5)), 4, volume, 0, 0, time + 12, instruments)]
     return res
 
-# chord = the current chord played along the bar
 def generate_melody(chord, volume, time, instruments):
     res = []
     t = time

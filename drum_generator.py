@@ -4,12 +4,6 @@ import copy
 import random
 from note import Note
 
-# returns something like: {
-# right_hand: [int:16],
-# left_hand: [int:16],
-# right_foot: [int:16],
-# left_foot: [int:16],
-# }
 def base_4_4():
     hihats = []
     for i in range(16):
@@ -84,8 +78,6 @@ def generate_bar():
         return base_swing()
     return base_motown_groove()
 
-# move one note randomly in an empty space
-# (hand = which array of note is edited)
 def move_note(bar: list, hand = 1):
     idxs = []
     empties = []
@@ -102,8 +94,6 @@ def move_note(bar: list, hand = 1):
     bar[hand][src] = -1
     return bar
 
-# add one random note in an empty space
-# (hand = which array of note is edited)
 def add_note(bar: list, hand = 1):
     empties = []
     for i in range(len(bar[hand])):
@@ -115,8 +105,6 @@ def add_note(bar: list, hand = 1):
     bar[hand][new] = random.randint(0, 48)
     return bar
 
-# Generate a 4 bar sequence following the motif
-# motif = "aaba" || "abab" || "abac" || "aabb"
 def generate_sentence(time, track = 0):
     a = generate_bar()
     b = copy.deepcopy(a)
@@ -159,11 +147,3 @@ def convert_pitch_to_notes(pitch_list: list, time, track = 0):
         res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
         i += 0.25
     return res
-
-# Outdated
-def append_drums_to_midi(drum_part, midi_file: MIDIFile, time, track = 0):
-    current_time = time
-    for bar in drum_part:
-        for note in bar:
-            midi_file.addNote(note.track, note.channel, note.pitch + 36, note.time, note.duration, note.volume)
-        

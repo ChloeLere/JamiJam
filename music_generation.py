@@ -9,10 +9,6 @@ import drum_generator
 import melody_generator
 import data
 
-#false -> major
-#true -> minor
-#pour scale
-
 class MusicGeneration:
     def __init__(self, tempo=-1, feeling="brightness", file_name="output_" + str(datetime.now())):
         self.chord_list = []
@@ -26,7 +22,6 @@ class MusicGeneration:
         if tempo < 0:
             self.tempo = random.randint(40, 200)
         self.feeling = feeling
-        #rytme
         self.root_degrees, self.name_degrees, type_note, self.list_matching_degrees = data.get_degrees_by_feeling(feeling)
 
         self.is_minor = (type_note == "Minor")
@@ -103,10 +98,7 @@ class MusicGeneration:
         return
     
 
-    def generate_introduction(self, n_phrases = 1): #entre 1 ou 2
-        #The introduction may also be based around the chords used in the verse, chorus, or bridge
-        #retirer les deux premiere bar d'un instrument aléatoir (pas les chord)
-        print("Introduction")
+    def generate_introduction(self, n_phrases = 1):
         degrees = data.get_new_note(self.list_matching_degrees, self.name_degrees, self.root_degrees)
         harmonie_list_tmp = []
         drums_list_tmp = []
@@ -135,24 +127,16 @@ class MusicGeneration:
         self.note_list += note_list_tmp
         self.bass_list += bass_list_tmp
     
-    def generate_verse(self, n_phrases = 4): # entre 2 et 8
-        #an AABB or ABAB rhyme scheme.
-        print("Verse")
+    def generate_verse(self, n_phrases = 4):
         for n in range(0, n_phrases):
             self.generic_generation("verse", self.root_degrees)
     
-    def generate_pre_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
-        print("Pre chorus")
+    def generate_pre_chorus(self, n_phrases = 1):
         for n in range(0, n_phrases):
             self.generic_generation("pre", self.root_degrees)
         return
     
-    def generate_refrain(self, n_phrases = 4): #entre 2 et 8
-        #les fonction finirons par tous renvoyer des phrases 
-        #generate_percussions : generate_drum_bar -> bcp changer
-        #generate_harmonie : generate_chord_progression 
-        #generate_bass : osef
-        #generate_lead : generate_melody -> prend le resultat de harmonie
+    def generate_refrain(self, n_phrases = 4):
         list_chord_refrain = []
         list_note_refrain = []
         list_drums_refrain = []
@@ -167,8 +151,7 @@ class MusicGeneration:
             list_note_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
             list_base_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
             self.time += 16
-    
-        print("Refrain")
+
         return list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain
 
     def add_new_refrain(self, list_chord_refrain, list_note_refrain, list_drums, list_base_refrain, n_phrase = 4):
@@ -219,24 +202,19 @@ class MusicGeneration:
 
         self.time += 16 * n_phrase
 
-        print("Repetition refrain")
-
         return new_list_chord_refrain, new_list_note_refrain, new_list_drums_refrain, new_list_base_refrain
     
-    def generate_post_chorus(self, n_phrases = 1): #1 ou 0.25 (donc une bar)
-        print("Post chorus")
+    def generate_post_chorus(self, n_phrases = 1):
         for n in range(0, n_phrases):
             self.generic_generation("post", self.root_degrees)
         return
     
-    def generate_bridge(self, n_phrases = 4):  #entre 2 et 8
-        print("Bridge")
+    def generate_bridge(self, n_phrases = 4):
         for n in range(0, n_phrases):
             self.generic_generation("bridge", self.root_degrees)
         return
     
-    def generate_conclusion(self, n_phrases = 1):# 1 ou 2
-        print("Conclusion")
+    def generate_conclusion(self, n_phrases = 1):
         harmonie_list_tmp = []
         drums_list_tmp = []
         note_list_tmp = []
@@ -288,7 +266,7 @@ class MusicGeneration:
             for note in chord.chord:
                 self.my_midi.addNote(chord.track, chord.channel, note + 48, chord.time, chord.duration, chord.volume)
 
-        for bar in self.note_list: #ERROR PROVOQUE ICI
+        for bar in self.note_list:
             for note in bar:
                 note.add_to_midi(self.my_midi)
         
@@ -303,4 +281,3 @@ class MusicGeneration:
         
         with open(self.file_name + ".mid", "wb") as output_file:
             self.my_midi.writeFile(output_file)
-        print("DONE===========================================================", self.time)

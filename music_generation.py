@@ -95,6 +95,7 @@ class MusicGeneration:
         harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, name_part)
         self.chord_list += harmonie
         drums = drum_generator.generate_sentence(self.time, 2)
+        drum_generator.add_crash_at_start(drums)
         self.drums_list += drums
         self.note_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
         self.bass_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
@@ -161,6 +162,7 @@ class MusicGeneration:
             harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, "refrain")
             list_chord_refrain += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
+            drum_generator.add_crash_at_start(drums)
             list_drums_refrain += drums
             list_note_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
             list_base_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
@@ -216,7 +218,7 @@ class MusicGeneration:
 
 
         self.time += 16 * n_phrase
-    
+
         print("Repetition refrain")
 
         return new_list_chord_refrain, new_list_note_refrain, new_list_drums_refrain, new_list_base_refrain
@@ -245,6 +247,7 @@ class MusicGeneration:
             harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "conclusion")
             harmonie_list_tmp += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
+            drum_generator.add_crash_at_start(drums)
             drums_list_tmp += drums
             note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
             bass_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)

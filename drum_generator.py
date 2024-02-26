@@ -144,6 +144,9 @@ def generate_sentence(time, track = 0):
         time += 4
     return res
 
+def add_crash_at_start(sentence):
+    sentence[0][0][0].pitch = 49
+
 def convert_bar_to_notes(bar, time, track = 0):
     return list(map(lambda member: convert_pitch_to_notes(member, time, track), bar))
 

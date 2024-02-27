@@ -125,7 +125,7 @@ def generate_sentence(time, track = 0):
             sentence = [a, b, a, c]
         case 3:
             sentence = [a, a, b, b]
-    i = time
+
     res = []
     for bar in sentence:
         res.append(convert_bar_to_notes(bar, time, track))
@@ -144,6 +144,6 @@ def convert_pitch_to_notes(pitch_list: list, time, track = 0):
     for pitch in pitch_list:
         if pitch != -1:
             pitch += 36
-        res.append(Note(pitch, 0.25, 100, track, 9, i, "drums"))
+        res.append(Note(pitch, 0.25, 100, track, 9, i))
         i += 0.25
     return res

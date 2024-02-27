@@ -61,24 +61,24 @@ def generate_phrase(root):
     bar4 = generate_bar(major_scale(root))
     return bar1 + bar2 + bar3 + bar4
 
-def generate_chord_progression(root, is_minor, volume, time, instruments):
+def generate_chord_progression(root, is_minor, volume, time):
     scale = Scale(root, is_minor)
     res = [
-        Chord(scale.getTriad(random.choice([1, 6])), 4, volume, 0, 0, time, instruments),
-        Chord(scale.getTriad(random.randint(4, 6)), 4, volume, 0, 0, time + 4, instruments),
-        Chord(scale.getTriad(random.randint(1, 6)), 4, volume, 0, 0, time + 8, instruments),
-        Chord(scale.getTriad(random.randint(4,5)), 4, volume, 0, 0, time + 12, instruments)]
+        Chord(scale.getTriad(random.choice([1, 6])), 4, volume, 0, 0, time),
+        Chord(scale.getTriad(random.randint(4, 6)), 4, volume, 0, 0, time + 4),
+        Chord(scale.getTriad(random.randint(1, 6)), 4, volume, 0, 0, time + 8),
+        Chord(scale.getTriad(random.randint(4,5)), 4, volume, 0, 0, time + 12)]
     return res
 
-def generate_melody(chord, volume, time, instruments):
+def generate_melody(chord, volume, time):
     res = []
     t = time
     for i in range(8):
         if i == 0:
-            res.append(Note(chord[0] + 12, 0.5, volume, 1, 1, t, instruments))
+            res.append(Note(chord[0] + 12, 0.5, volume, 1, 1, t))
             t += 0.5
             continue
-        res.append(Note(random.choice(chord) + 12, 0.5, volume, 1, 1, t, instruments))
+        res.append(Note(random.choice(chord) + 12, 0.5, volume, 1, 1, t))
         t += 0.5
     return res
 

@@ -1,15 +1,13 @@
 from midiutil import MIDIFile
 
 class Note():
-    def __init__(self, pitch, duration, volume, track, channel, time, instruments = None) -> None:
+    def __init__(self, pitch, duration, volume, track, channel, time) -> None:
         self.pitch = pitch
         self.duration = duration
         self.volume = volume
         self.track = track
         self.channel = channel
         self.time = time
-
-        self.instruments = instruments
     
     def add_to_midi(self, midi_file: MIDIFile):
         if self.pitch == -1:

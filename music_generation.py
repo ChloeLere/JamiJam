@@ -86,17 +86,15 @@ class MusicGeneration:
 
         self.create_file()
 
-    def generic_generation(self, name_part, degrees):
-        harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, name_part)
+    def generic_generation(self, degrees):
+        harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time)
         self.chord_list += harmonie
         drums = drum_generator.generate_sentence(self.time, 2)
         drum_generator.add_crash_at_start(drums)
         self.drums_list += drums
-        self.note_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
-        self.bass_list += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
+        self.note_list += melody_generator.generate_melody(harmonie, self.volume, self.time)
+        self.bass_list += melody_generator.generate_melody(harmonie, self.volume, self.time, 36, 3)
         self.time += 16
-        return
-    
 
     def generate_introduction(self, n_phrases = 1):
         degrees = data.get_new_note(self.list_matching_degrees, self.name_degrees, self.root_degrees)
@@ -106,12 +104,12 @@ class MusicGeneration:
         bass_list_tmp = []
 
         for n in range(0, n_phrases):
-            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "introduction")
+            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time)
             harmonie_list_tmp += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
             drums_list_tmp += drums
-            note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
-            bass_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
+            note_list_tmp += melody_generator.generate_melody(harmonie, self.volume, self.time)
+            bass_list_tmp += melody_generator.generate_melody(harmonie, self.volume, self.time, 36, 3)
             self.time += 16
         
         rand = random.randint(0, 10)
@@ -129,12 +127,11 @@ class MusicGeneration:
     
     def generate_verse(self, n_phrases = 4):
         for n in range(0, n_phrases):
-            self.generic_generation("verse", self.root_degrees)
+            self.generic_generation(self.root_degrees)
     
     def generate_pre_chorus(self, n_phrases = 1):
         for n in range(0, n_phrases):
-            self.generic_generation("pre", self.root_degrees)
-        return
+            self.generic_generation(self.root_degrees)
     
     def generate_refrain(self, n_phrases = 4):
         list_chord_refrain = []
@@ -143,13 +140,13 @@ class MusicGeneration:
         list_base_refrain = []
     
         for n in range(0, n_phrases):
-            harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time, "refrain")
+            harmonie = mg_lib.generate_chord_progression(self.root_degrees, self.is_minor, self.volume, self.time)
             list_chord_refrain += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
             drum_generator.add_crash_at_start(drums)
             list_drums_refrain += drums
-            list_note_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
-            list_base_refrain += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
+            list_note_refrain += melody_generator.generate_melody(harmonie, self.volume, self.time)
+            list_base_refrain += melody_generator.generate_melody(harmonie, self.volume, self.time, 36, 3)
             self.time += 16
 
         return list_chord_refrain, list_note_refrain, list_drums_refrain, list_base_refrain
@@ -162,17 +159,18 @@ class MusicGeneration:
 
         t = 0
         for chord in list_chord_refrain:
-            new_list_chord_refrain.append(Chord(chord.chord, chord.duration, chord.volume, chord.track, chord.channel, self.time + t, chord.instruments))
+            new_list_chord_refrain.append(Chord(chord.chord, chord.duration, chord.volume, chord.track, chord.channel, self.time + t))
             t += chord.duration
 
-        t = 0
+        current_time = self.time
         for bar in list_note_refrain:
-            bar_list = []
+            new_bar = []
+            bar_t = 0
             for note in bar:
-                bar_list.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + t, note.instruments))
-                t += note.duration
-            new_list_note_refrain.append(bar_list)
-        
+                new_bar.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, bar_t + current_time))
+                bar_t += note.duration
+            current_time += 4
+            new_list_note_refrain.append(new_bar)
 
         t = 0
         for bar in list_drums:
@@ -182,7 +180,7 @@ class MusicGeneration:
                 new_seq = []
                 seq_t = bar_t
                 for note in seq:
-                    new_seq.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + seq_t, note.instruments))
+                    new_seq.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, self.time + seq_t))
                     seq_t += 0.25
                 new_bar.append(new_seq)
             t += 4
@@ -194,7 +192,7 @@ class MusicGeneration:
             new_bar = []
             bar_t = 0
             for note in bar:
-                new_bar.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, bar_t + current_time, note.instruments))
+                new_bar.append(Note(note.pitch, note.duration, note.volume, note.track, note.channel, bar_t + current_time))
                 bar_t += note.duration
             current_time += 4
             new_list_base_refrain.append(new_bar)
@@ -206,13 +204,11 @@ class MusicGeneration:
     
     def generate_post_chorus(self, n_phrases = 1):
         for n in range(0, n_phrases):
-            self.generic_generation("post", self.root_degrees)
-        return
+            self.generic_generation(self.root_degrees)
     
     def generate_bridge(self, n_phrases = 4):
         for n in range(0, n_phrases):
-            self.generic_generation("bridge", self.root_degrees)
-        return
+            self.generic_generation(self.root_degrees)
     
     def generate_conclusion(self, n_phrases = 1):
         harmonie_list_tmp = []
@@ -222,13 +218,13 @@ class MusicGeneration:
 
         degrees = data.get_new_note(self.list_matching_degrees, self.name_degrees, self.root_degrees)
         for n in range(0, n_phrases):
-            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time, "conclusion")
+            harmonie = mg_lib.generate_chord_progression(degrees, self.is_minor, self.volume, self.time)
             harmonie_list_tmp += harmonie
             drums = drum_generator.generate_sentence(self.time, 2)
             drum_generator.add_crash_at_start(drums)
             drums_list_tmp += drums
-            note_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time)
-            bass_list_tmp += melody_generator.generate_melody(harmonie, drums, self.volume, self.time, 36, 3)
+            note_list_tmp += melody_generator.generate_melody(harmonie, self.volume, self.time)
+            bass_list_tmp += melody_generator.generate_melody(harmonie, self.volume, self.time, 36, 3)
             self.time += 16
 
         volume = self.volume

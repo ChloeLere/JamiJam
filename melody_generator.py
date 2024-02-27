@@ -9,9 +9,9 @@ def generate_melody(chord_progression, volume, time, pitch_bend = 60, track=1):
         bar = []
         bar_time = 0
         while bar_time <= 4:
-            duration = random.choice([0.25, 0.5, 1])
+            duration = random.choice([0.25, 0.5, 1.0])
             pitch = random.choice(chord.chord) + pitch_bend
-            bar.append(Note(pitch, duration, volume, track, 1, bar_time + current_time))
+            bar.append(Note(pitch, duration, volume, track, track, bar_time + current_time))
             bar_time += duration
         current_time += 4
         res.append(bar)

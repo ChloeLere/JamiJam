@@ -1,3 +1,5 @@
+## JAMIJAM
+## Developed by Clovis Schneider & Chloé Lere
 
 class Scale():
     def __init__(self, root, isMinor = False) -> None:

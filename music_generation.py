@@ -1,3 +1,6 @@
+## JAMIJAM
+## Developed by Clovis Schneider & Chloé Lere
+
 from midiutil import MIDIFile
 import random
 from datetime import datetime

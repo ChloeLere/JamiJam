@@ -1,3 +1,6 @@
+## JAMIJAM
+## Developed by Clovis Schneider & Chloé Lere
+
 import pandas as pd
 
 def get_degrees_by_feeling(feeling):

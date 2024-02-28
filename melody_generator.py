@@ -1,3 +1,6 @@
+## JAMIJAM
+## Developed by Clovis Schneider & Chloé Lere
+
 from note import Note
 from chord import Chord
 import random

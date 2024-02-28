@@ -39,6 +39,3 @@ def main():
 
     win.addButton("Generate", generate)
     win.go()
-
-
-main()

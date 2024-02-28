@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ## JAMIJAM
 ## Developed by Clovis Schneider & Chloé Lere
 

@@ -27,6 +27,9 @@ def generate(btn):
         filename = "output_" + str(datetime.now())
     music_gen = MusicGeneration(int(tempo), emotion, filename) 
     music_gen.generate_midi()
+    win.infoBox("Generation complete", "The music generation is over. The MIDI file was created successfully.")
+
+
 
 def main():
     win.setIcon("./resources/transparent_logo.gif")
